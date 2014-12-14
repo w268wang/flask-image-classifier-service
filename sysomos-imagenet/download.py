@@ -8,11 +8,9 @@ image_ext = {"jpeg", "jpg", "png"}
 
 LOG = getLogger("downloader")
 
-
 def image(url):
-    LOG.info("Url received: " + url)
     ext = url.split(".")[-1].lower()
-    if ext in image_ext:
+    if is_image(ext):
         LOG.info("File is an image with extension: " + ext)
         path = download_image(url, ext)
         return path
@@ -20,9 +18,11 @@ def image(url):
         LOG.info("File is not an image! Extension: " + ext)
         return None
 
-
 def download_image(url, ext):
     path = base_path + b64encode(url) + "." + ext
     urlretrieve(url, path)
-    LOG.info("File has been saved successfully! Path: " + path)
+    LOG.info("File has been saved successfully! Path: " + path )
     return path
+
+def is_image(ext):
+    return (ext in image_ext)
