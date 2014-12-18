@@ -22,7 +22,7 @@ def classify(prepared_image):
     # LABEL_FILE = CAFFE_PATH + '/data/ilsvrc12/synset_words.txt'
     MEAN_FILE = CAFFE_PATH + '/python/caffe/imagenet/ilsvrc_2012_mean.npy'
     classifier = caffe.Classifier(MODEL_FILE, PRETRAINED,
-                       mean_file=MEAN_FILE,channel_swap=(2,1,0),input_scale=255,image_dims=(256,256),gpu=False)
+                       mean_file=MEAN_FILE,channel_swap=(2,1,0),input_scale=255,image_dims=(256,256))
     classifier.set_phase_test()
     classifier.set_mode_cpu()
     input_image = [caffe.io.load_image(prepared_image)]
