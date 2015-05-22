@@ -6,6 +6,7 @@ import preprocess
 import download
 import caffenet
 
+
 @lru_cache(maxsize=1024)
 def run(url):
     """
@@ -14,10 +15,6 @@ def run(url):
     :param url:
     :return: classification object
     """
-    retresult = db.get(url)
-    if not retresult:
-        path_to_file = download.image(url)
-        prepared_obj = preprocess.prepare_image(path_to_file)
-        retresult = caffenet.classify(prepared_obj)
-        db.put(url, path_to_file, retresult)
+    path_to_file = download.get(url)
+    retresult = caffenet.classify(path_to_file)
     return retresult
