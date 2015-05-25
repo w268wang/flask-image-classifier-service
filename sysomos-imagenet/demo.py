@@ -12,14 +12,28 @@ from apiclient.discovery import build
 
 
 def get_clarifai_api_result(imageurl):
-    return clarifaiApi.tag_image_urls(imageurl)
+    clarifaiApi = ClarifaiApi()
+    json_dic = clarifaiApi.tag_image_urls(imageurl)
+    json_pair = json_dic["results"][0]["result"]["tag"]
+
+    # extract information from the result
+    classes_list = json_pair["classes"]
+    probs_list = json_pair["probs"]
+    result_pair = {}
+    for i in xrange(len(classes_list)):
+        result_pair[classes_list[i]] = probs_list[i]
+    print(result_pair)
+    return result_pair
 
 def get_google_api_result(imageurl):
+    #http://images.google.com/searchbyimage?site=search&image_url={user_url}
     service = build("customsearch", "v1",
             developerKey="AIzaSyDiXTs1EgtxyksBV-lCXJ7L1Ttxci_DaZE")
 
     res = service.cse().list(
-      q='lectures',
+      q='cat',
+      image_url='http://hdwbin.com/wp-content/uploads/2015/01/Cute-Cat-picture.jpg',
+      cx="005698134567108455978:fte4nd-jg5w",
       searchType = "image",
     ).execute()
     pprint.pprint(res)
@@ -32,8 +46,6 @@ def get_caffe_result(imageurl):
 
 def main(argv):
     imageurl = argv[0]
-    
-    clarifaiApi = ClarifaiApi()
 
     if imageurl.startswith('http'):
         # get response from clarifaiApi
@@ -55,4 +67,3 @@ def main(argv):
 
 if __name__ == '__main__':
     # main(sys.argv)
-    get_google_api_result("saqwed")
